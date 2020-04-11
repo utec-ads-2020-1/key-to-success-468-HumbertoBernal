@@ -16,7 +16,7 @@ int main() {
 
     cin >> number;
     getline(cin, notEncoded);
-    for(int i =0; i < number + 1; i++){
+    while(number--){
         getline(cin, notEncoded);
         getline(cin, notEncoded);
         getline(cin, encoded);
@@ -57,9 +57,9 @@ int main() {
 
         for (int m = 0; m < vec.size(); ++m) {key[vec1[m]] = vec[m];}
 
-        if(i != 0){cout << endl << endl;}
         for (char k : encoded) {cout << key[k];}
-
+        if(number != 0){cout << endl; cout << endl;}
+        else{cout << endl;}
 
         vec.clear();
         vec1.clear();
