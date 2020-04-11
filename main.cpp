@@ -1,33 +1,15 @@
 #include <iostream>
 #include <vector>
 #include <map>
-#include <set>
-#include <stdio.h>
-#include <string.h>
+
 
 using namespace std;
 
-
-
-struct comp
-{
-    template<typename T>
-    bool operator()(const T& l, const T& r) const
-    {
-        if (l.second != r.second)
-            return l.second > r.second;
-
-        return l.first > r.first;
-    }
-};
-
 int main() {
-
-
     bool cambio;
-    int number, n;
+    int number;
     string encoded, notEncoded;
-    vector<char> encod;
+    vector<char> vec, vec1;
     map <char, int> deco, deco2;
     char pivote;
     map <char, char> key;
@@ -39,67 +21,48 @@ int main() {
         getline(cin, notEncoded);
         getline(cin, encoded);
 
-        char notEncodedBuff[notEncoded.length()];
-        strcpy(notEncodedBuff,notEncoded.c_str());
-        char encodedBuff[encoded.length()];
-        strcpy(encodedBuff, encoded.c_str());
+        for (char k : notEncoded) {deco2[k] += 1 ;}
 
-        for (int j = 0; j < notEncoded.length(); ++j) {
-            deco[notEncodedBuff[j]] += 1;
-        }
-        for (int k = 0; k < encoded.length(); ++k) {
-            deco2[encodedBuff[k]] += 1;
-        }
+        for (char k : encoded) {deco[k] += 1 ;}
 
-        for (auto& x: deco2) {
-            encod.push_back(x.first);
-        }
+        for (auto const& pair: deco2) {vec.push_back(pair.first);}
+        for (auto const& pair: deco) {vec1.push_back(pair.first);}
 
-        for (int m = 0; m < encod.size(); ++m) {
-
-            cout << encod[m] << " " << deco2[encoded[m]]  << endl;
-
-        }
-
-        for (int l = 0; l < encod.size() ; ++l) {
+        for (int l = 0; l < vec.size() ; ++l) {
             cambio = false;
-            for (int j = 0; j < encod.size() ; ++j) {
-                if(deco2[encod[l]] < deco2[encod[l+1]] )
+            for (int j = 0; j < vec.size()-l-1 ; ++j) {
+                if(deco2[vec[j]] < deco2[vec[j+1]] )
                 {
-                    pivote = encod[l];
-                    encod[l] = encod[l+1];
-                    encod[l+1] = pivote;
+                    pivote = vec[j];
+                    vec[j] = vec[j+1];
+                    vec[j+1] = pivote;
+                    cambio = true;
+                }
+            }
+            if(!cambio){break;}
+        }
+        for (int l = 0; l < vec1.size() ; ++l) {
+            cambio = false;
+            for (int j = 0; j < vec1.size()-l-1 ; ++j) {
+                if(deco[vec1[j]] < deco[vec1[j+1]] )
+                {
+                    pivote = vec1[j];
+                    vec1[j] = vec1[j+1];
+                    vec1[j+1] = pivote;
                     cambio = true;
                 }
             }
             if(!cambio){break;}
         }
 
-        // create an empty vector of pairs
-        set<pair<char,int>, comp> set(deco.begin(), deco.end());
+        for (int m = 0; m < vec.size(); ++m) {key[vec1[m]] = vec[m];}
 
-        // print the vector
-        n = 0;
-        for (auto const &pair: set) {
-            key[encod[n]] = pair.first;
-            cout << pair.first << " " <<  deco[pair.first] << endl;
-            n += 1;
-        }
-        cout << endl ;
-        for (int m = 0; m < encod.size(); ++m) {
+        if(i != 0){cout << endl << endl;}
+        for (char k : encoded) {cout << key[k];}
 
-            cout << encod[m] << " " << deco2[encoded[m]]  << endl;
 
-        }
-
-        for (int m = 0; m < encoded.length(); ++m) {
-
-            cout << key[encodedBuff[m]] ;
-
-        }
-        cout << endl;
-
-        encod.clear();
+        vec.clear();
+        vec1.clear();
         deco.clear();
         deco2.clear();
     }
